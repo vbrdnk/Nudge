@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
-import { Action, ActionPanel, Form, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Form, showToast, Toast } from "@raycast/api";
 import { ConversionResult } from "@/types/conversionResult";
+import { NudgeConverter } from "@/utils/nudgeConverter";
 
 export default function Command() {
   const [text, setText] = useState("");
@@ -15,8 +16,10 @@ export default function Command() {
         type: type,
       };
 
-      // Add new result to the top of the results array
       setConversionResult(result);
+
+      // Copy the result into clipboard for convenience
+      Clipboard.copy(result.converted);
 
       // Optional: Show a success toast
       showToast({
@@ -46,54 +49,29 @@ export default function Command() {
       <Action
         key="json"
         title="Convert Json to Js Object"
-        onAction={() =>
-          performConversion((input) => {
-            return JSON.stringify(input, null, 2)
-              .replace(/"([^"]+)":/g, "$1:") // Remove quotes around keys
-              .replace(/"/g, "'"); // (Optional) Replace double quotes with single quotes for string values
-          }, "JSON to JS Object")
-        }
+        onAction={() => performConversion(NudgeConverter.jsonToJsObject, "JSON to JS Object")}
       />,
       <Action
         key="jsobject"
         title="Convert Js Object to Json"
-        onAction={() =>
-          performConversion((input) => {
-            return JSON.stringify(input);
-          }, "JSON to JS Object")
-        }
+        onAction={() => performConversion(NudgeConverter.jsObjectToJson, "JSON to JS Object")}
       />,
       <Action
         key="fromUnicode"
         title="From Unicode"
-        onAction={() =>
-          performConversion((input) => {
-            return input.replace(/\\u([0-9a-fA-F]{4})/g, (_, code) => String.fromCharCode(parseInt(code, 16)));
-          }, "From Unicode")
-        }
+        onAction={() => performConversion(NudgeConverter.fromUnicode, "From Unicode")}
       />,
       <Action
         key="toUnicode"
         title="To Unicode"
-        onAction={() =>
-          performConversion((input) => {
-            return input
-              .split("")
-              .map((char) => `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`)
-              .join("");
-          }, "To Unicode")
-        }
+        onAction={() => performConversion(NudgeConverter.toUnicode, "To Unicode")}
       />,
       <Action
         key="trimStart"
         title="Trim Start"
-        onAction={() => performConversion((input) => input.trimStart(), "Trim Start")}
+        onAction={() => performConversion(NudgeConverter.trimStart, "Trim Start")}
       />,
-      <Action
-        key="trimEnd"
-        title="Trim End"
-        onAction={() => performConversion((input) => input.trimEnd(), "Trim End")}
-      />,
+      <Action key="trimEnd" title="Trim End" onAction={() => performConversion(NudgeConverter.trimEnd, "Trim End")} />,
 
       <Action key="clear" title="Clear Results" onAction={clearResults} />,
     ],
