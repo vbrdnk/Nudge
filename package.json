@@ -3,7 +3,7 @@
   "name": "nudge",
   "title": "Nudge",
   "description": "Raycast text transformation toolkit for developers",
-  "icon": "nudge_icon.svg",
+  "icon": "icon.svg",
   "author": "vbrdnk",
   "categories": [
     "Productivity",
@@ -13,7 +13,7 @@
   "commands": [
     {
       "name": "index",
-      "title": "Nudge converter",
+      "title": "Nudge",
       "description": "Convert and transform text",
       "mode": "view"
     }
