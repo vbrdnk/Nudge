@@ -22,13 +22,12 @@ capabilities.
     - Decode Unicode to readable text
 
 - **Whitespace Management**
-    - Trim start of text
-    - Trim end of text
+    - Trim text
 
 ### Upcoming Features (Roadmap)
 
 - [ ] Base64 Encoding/Decoding
-- [ ] URL Encoding/Decoding
+- [x] URL Encoding/Decoding
 - [ ] HTML Entity Conversion
 - [ ] Case Transformations (camelCase, snake_case, etc.)
 - [ ] Advanced JSON manipulation

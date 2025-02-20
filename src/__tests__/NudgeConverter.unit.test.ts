@@ -104,19 +104,39 @@ describe("NudgeConverter", () => {
     });
   });
 
-  describe("trimStart", () => {
-    it("should trim start of string", () => {
-      const input = "  Hello World";
-      const result = NudgeConverter.trimStart(input);
+  describe("trim", () => {
+    it("should trim all whitespaces", () => {
+      const input = "  Hello World ";
+      const result = NudgeConverter.trim(input);
       expect(result).toBe("Hello World");
     });
   });
 
-  describe("trimEnd", () => {
-    it("should trim end of string", () => {
-      const input = "Hello World  ";
-      const result = NudgeConverter.trimEnd(input);
-      expect(result).toBe("Hello World");
+  describe("URL Validation", () => {
+    describe("URL Encoding with Validation", () => {
+      it("should encode valid URL", () => {
+        const validUrl = "https://example.com/path?name=John Doe";
+        const encoded = NudgeConverter.encodeUrl(validUrl);
+        expect(encoded).toBe("https%3A%2F%2Fexample.com%2Fpath%3Fname%3DJohn%20Doe");
+      });
+
+      it("should throw error for invalid URL during encoding", () => {
+        const invalidUrl = "not a url";
+        expect(() => NudgeConverter.encodeUrl(invalidUrl)).toThrow("Invalid URL format");
+      });
+    });
+
+    describe("URL Decoding with Validation", () => {
+      it("should decode valid encoded URL", () => {
+        const encodedUrl = "https%3A%2F%2Fexample.com%2Fpath%3Fname%3DJohn%20Doe";
+        const decoded = NudgeConverter.decodeUrl(encodedUrl);
+        expect(decoded).toBe("https://example.com/path?name=John Doe");
+      });
+
+      it("should throw error for invalid URL encoding", () => {
+        const invalidEncoding = "%";
+        expect(() => NudgeConverter.decodeUrl(invalidEncoding)).toThrow("Invalid URL encoding");
+      });
     });
   });
 });

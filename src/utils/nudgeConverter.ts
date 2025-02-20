@@ -1,4 +1,6 @@
 export class NudgeConverter {
+  private static URL_REGEX = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+
   static jsonToJsObject(input: string): string {
     try {
       const parsedObject = JSON.parse(input.replace(/"__undefined__"/g, "undefined"));
@@ -75,11 +77,47 @@ export class NudgeConverter {
       .join("");
   }
 
-  static trimStart(input: string): string {
-    return input.trimStart();
+  static trim(input: string): string {
+    return input.trim();
   }
 
-  static trimEnd(input: string): string {
-    return input.trimEnd();
+  static encodeUrl(input: string): string {
+    const trimmedInput = input.trim();
+
+    //Validate the input
+    if (!this.isValidUrl(trimmedInput)) {
+      throw new Error("Invalid URL format");
+    }
+
+    return encodeURIComponent(trimmedInput);
+  }
+
+  static decodeUrl(input: string): string {
+    // Validate encoded URL
+    try {
+      const decoded = decodeURIComponent(input);
+
+      // Optional: Validate decoded URL
+      if (input !== encodeURIComponent(decoded)) {
+        throw new Error("Invalid URL encoding");
+      }
+
+      return decoded;
+    } catch (error) {
+      throw new Error("Invalid URL encoding");
+    }
+  }
+
+  private static isValidUrl(input: string): boolean {
+    // Check against regex
+    if (this.URL_REGEX.test(input)) return true;
+
+    // Additional Checks
+    try {
+      new URL(input);
+      return true;
+    } catch {
+      return false;
+    }
   }
 }

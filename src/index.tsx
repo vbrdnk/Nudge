@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { Action, ActionPanel, Clipboard, Form, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Form, showToast, Toast, Icon } from "@raycast/api";
 import { ConversionResult } from "@/types/conversionResult";
-import { NudgeConverter } from "@/utils/nudgeConverter";
+import { actions as converterActions } from "@/utils/converterActions";
 
 export default function Command() {
   const [text, setText] = useState("");
@@ -21,10 +21,10 @@ export default function Command() {
       // Copy the result into clipboard for convenience
       Clipboard.copy(result.converted);
 
-      // Optional: Show a success toast
+      // Show a success toast
       showToast({
         style: Toast.Style.Success,
-        title: `${type} Conversion Successful`,
+        title: `Conversion Successful. Copied to Clipboard`,
       });
     } catch (error) {
       // Handle conversion errors
@@ -46,33 +46,9 @@ export default function Command() {
       ...(conversionResult?.converted
         ? [<Action.CopyToClipboard key="copy" title="Copy to Clipboard" content={conversionResult.converted} />]
         : []),
-      <Action
-        key="json"
-        title="Convert Json to Js Object"
-        onAction={() => performConversion(NudgeConverter.jsonToJsObject, "JSON to JS Object")}
-      />,
-      <Action
-        key="jsobject"
-        title="Convert Js Object to Json"
-        onAction={() => performConversion(NudgeConverter.jsObjectToJson, "JSON to JS Object")}
-      />,
-      <Action
-        key="fromUnicode"
-        title="From Unicode"
-        onAction={() => performConversion(NudgeConverter.fromUnicode, "From Unicode")}
-      />,
-      <Action
-        key="toUnicode"
-        title="To Unicode"
-        onAction={() => performConversion(NudgeConverter.toUnicode, "To Unicode")}
-      />,
-      <Action
-        key="trimStart"
-        title="Trim Start"
-        onAction={() => performConversion(NudgeConverter.trimStart, "Trim Start")}
-      />,
-      <Action key="trimEnd" title="Trim End" onAction={() => performConversion(NudgeConverter.trimEnd, "Trim End")} />,
-
+      ...converterActions.map(({ action, title, type }) => {
+        return <Action key={title} title={title} onAction={() => performConversion(action, type)} />;
+      }),
       <Action key="clear" title="Clear Results" onAction={clearResults} />,
     ],
     [text, conversionResult],
