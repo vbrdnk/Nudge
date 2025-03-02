@@ -108,6 +108,113 @@ export class NudgeConverter {
     }
   }
 
+  static encodeBase64(input: string): string {
+    try {
+      return Buffer.from(input).toString("base64");
+    } catch (error) {
+      throw new Error(`Base64 encoding failed: ${(error as Error).message}`);
+    }
+  }
+
+  static decodeBase64(input: string): string {
+    try {
+      return Buffer.from(input, "base64").toString("utf-8");
+    } catch (error) {
+      throw new Error(`Invalid Base64 encoding: ${(error as Error).message}`);
+    }
+  }
+
+  static encodeHtmlEntities(input: string): string {
+    return input
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  static decodeHtmlEntities(input: string): string {
+    return input
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(parseInt(dec, 10)));
+  }
+
+  static toCamelCase(input: string): string {
+    return input
+      .replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ""))
+      .replace(/^[A-Z]/, (c) => c.toLowerCase());
+  }
+
+  static toSnakeCase(input: string): string {
+    return input
+      .replace(/([a-z])([A-Z])/g, "$1_$2")
+      .replace(/[-\s]+/g, "_")
+      .toLowerCase();
+  }
+
+  static toKebabCase(input: string): string {
+    return input
+      .replace(/([a-z])([A-Z])/g, "$1-$2")
+      .replace(/[_\s]+/g, "-")
+      .toLowerCase();
+  }
+
+  static toPascalCase(input: string): string {
+    return input.replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : "")).replace(/^(.)/, (c) => c.toUpperCase());
+  }
+
+  static formatJson(input: string, spaces = 2): string {
+    try {
+      const obj = JSON.parse(input);
+      return JSON.stringify(obj, null, spaces);
+    } catch (error) {
+      throw new Error(`Invalid JSON: ${(error as Error).message}`);
+    }
+  }
+
+  static minifyJson(input: string): string {
+    try {
+      const obj = JSON.parse(input);
+      return JSON.stringify(obj);
+    } catch (error) {
+      throw new Error(`Invalid JSON: ${(error as Error).message}`);
+    }
+  }
+
+  static sortJsonKeys(input: string): string {
+    try {
+      const obj = JSON.parse(input);
+
+      const sortObject = <T>(object: T): T => {
+        if (typeof object !== "object" || object === null) {
+          return object;
+        }
+
+        if (Array.isArray(object)) {
+          return object.map(sortObject) as unknown as T;
+        }
+
+        const sortedKeys = Object.keys(object as object).sort();
+        const result: Record<string, unknown> = {};
+
+        for (const key of sortedKeys) {
+          result[key] = sortObject((object as Record<string, unknown>)[key]);
+        }
+
+        return result as unknown as T;
+      };
+
+      const sortedObj = sortObject(obj);
+      return JSON.stringify(sortedObj, null, 2);
+    } catch (error) {
+      throw new Error(`Invalid JSON: ${(error as Error).message}`);
+    }
+  }
+
   private static isValidUrl(input: string): boolean {
     // Check against regex
     if (this.URL_REGEX.test(input)) return true;

@@ -14,24 +14,42 @@ capabilities.
 ### Current Transformations
 
 - **JSON Conversions**
-    - Convert JSON to JavaScript Object
-    - Convert JavaScript Object to JSON
+
+  - Convert JSON to JavaScript Object
+  - Convert JavaScript Object to JSON
+  - Format JSON (Pretty Print)
+  - Minify JSON
+  - Sort JSON Keys
 
 - **Unicode Transformations**
-    - Convert text to Unicode
-    - Decode Unicode to readable text
+
+  - Convert text to Unicode
+  - Decode Unicode to readable text
 
 - **Whitespace Management**
-    - Trim text
+
+  - Trim text
+
+- **Encoding/Decoding**
+
+  - URL Encoding/Decoding
+  - Base64 Encoding/Decoding
+  - HTML Entity Encoding/Decoding
+
+- **Case Transformations**
+
+  - Convert to camelCase
+  - Convert to snake_case
+  - Convert to kebab-case
+  - Convert to PascalCase
 
 ### Upcoming Features (Roadmap)
 
-- [ ] Base64 Encoding/Decoding
+- [x] Base64 Encoding/Decoding
 - [x] URL Encoding/Decoding
-- [ ] HTML Entity Conversion
-- [ ] Case Transformations (camelCase, snake_case, etc.)
-- [ ] Advanced JSON manipulation
-- [ ] Regular Expression tools
+- [x] HTML Entity Conversion
+- [x] Case Transformations (camelCase, snake_case, etc.)
+- [x] Advanced JSON manipulation
 - [ ] Custom transformation plugins
 - [ ] Performance optimizations
 
@@ -83,9 +101,9 @@ Your input is crucial! We welcome:
 
 ## Development Status
 
-- **Current Version**: v0.1.0 (Initial Release)
+- **Current Version**: v0.2.0 (Feature Release)
 - **Status**: Active Development
-- **Last Updated**: [Current Date]
+- **Last Updated**: February 2025
 
 ## Tech Stack
 
@@ -109,3 +127,4 @@ npm run test
 
 # Build extension
 npm run build
+```

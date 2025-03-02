@@ -139,4 +139,119 @@ describe("NudgeConverter", () => {
       });
     });
   });
+
+  describe("Base64 Encoding/Decoding", () => {
+    it("should encode string to Base64", () => {
+      const input = "Hello World";
+      const result = NudgeConverter.encodeBase64(input);
+      expect(result).toBe("SGVsbG8gV29ybGQ=");
+    });
+
+    it("should decode Base64 to string", () => {
+      const input = "SGVsbG8gV29ybGQ=";
+      const result = NudgeConverter.decodeBase64(input);
+      expect(result).toBe("Hello World");
+    });
+
+    it("should handle empty string for Base64 encoding", () => {
+      const input = "";
+      const result = NudgeConverter.encodeBase64(input);
+      expect(result).toBe("");
+    });
+  });
+
+  describe("HTML Entity Conversion", () => {
+    it("should encode text to HTML entities", () => {
+      const input = "<div>Hello & 'World'</div>";
+      const result = NudgeConverter.encodeHtmlEntities(input);
+      expect(result).toBe("&lt;div&gt;Hello &amp; &#39;World&#39;&lt;/div&gt;");
+    });
+
+    it("should decode HTML entities to plain text", () => {
+      const input = "&lt;div&gt;Hello &amp; &#39;World&#39;&lt;/div&gt;";
+      const result = NudgeConverter.decodeHtmlEntities(input);
+      expect(result).toBe("<div>Hello & 'World'</div>");
+    });
+  });
+
+  describe("Case Transformations", () => {
+    it("should convert to camelCase", () => {
+      expect(NudgeConverter.toCamelCase("hello world")).toBe("helloWorld");
+      expect(NudgeConverter.toCamelCase("Hello World")).toBe("helloWorld");
+      expect(NudgeConverter.toCamelCase("hello-world")).toBe("helloWorld");
+      expect(NudgeConverter.toCamelCase("hello_world")).toBe("helloWorld");
+    });
+
+    it("should convert to snake_case", () => {
+      expect(NudgeConverter.toSnakeCase("hello world")).toBe("hello_world");
+      expect(NudgeConverter.toSnakeCase("helloWorld")).toBe("hello_world");
+      expect(NudgeConverter.toSnakeCase("HelloWorld")).toBe("hello_world");
+      expect(NudgeConverter.toSnakeCase("hello-world")).toBe("hello_world");
+    });
+
+    it("should convert to kebab-case", () => {
+      expect(NudgeConverter.toKebabCase("hello world")).toBe("hello-world");
+      expect(NudgeConverter.toKebabCase("helloWorld")).toBe("hello-world");
+      expect(NudgeConverter.toKebabCase("HelloWorld")).toBe("hello-world");
+      expect(NudgeConverter.toKebabCase("hello_world")).toBe("hello-world");
+    });
+
+    it("should convert to PascalCase", () => {
+      expect(NudgeConverter.toPascalCase("hello world")).toBe("HelloWorld");
+      expect(NudgeConverter.toPascalCase("helloWorld")).toBe("HelloWorld");
+      expect(NudgeConverter.toPascalCase("hello-world")).toBe("HelloWorld");
+      expect(NudgeConverter.toPascalCase("hello_world")).toBe("HelloWorld");
+    });
+  });
+
+  describe("Advanced JSON Operations", () => {
+    it("should format JSON with proper indentation", () => {
+      const input = '{"name":"John","age":30,"address":{"city":"New York","zip":"10001"}}';
+      const expected = `{
+  "name": "John",
+  "age": 30,
+  "address": {
+    "city": "New York",
+    "zip": "10001"
+  }
+}`;
+      const result = NudgeConverter.formatJson(input);
+      expect(result).toBe(expected);
+    });
+
+    it("should minify JSON by removing whitespace", () => {
+      const input = `{
+  "name": "John",
+  "age": 30,
+  "address": {
+    "city": "New York",
+    "zip": "10001"
+  }
+}`;
+      const expected = '{"name":"John","age":30,"address":{"city":"New York","zip":"10001"}}';
+      const result = NudgeConverter.minifyJson(input);
+      expect(result).toBe(expected);
+    });
+
+    it("should sort JSON keys alphabetically", () => {
+      const input = '{"z":1,"a":2,"nested":{"y":3,"x":4}}';
+      const expected = `{
+  "a": 2,
+  "nested": {
+    "x": 4,
+    "y": 3
+  },
+  "z": 1
+}`;
+      const result = NudgeConverter.sortJsonKeys(input);
+      expect(result).toBe(expected);
+    });
+
+    it("should throw error for invalid JSON in advanced operations", () => {
+      const input = '{"invalid": "json",}';
+      expect(() => NudgeConverter.formatJson(input)).toThrow("Invalid JSON");
+      expect(() => NudgeConverter.minifyJson(input)).toThrow("Invalid JSON");
+      expect(() => NudgeConverter.sortJsonKeys(input)).toThrow("Invalid JSON");
+    });
+  });
 });
