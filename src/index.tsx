@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Action, ActionPanel, Clipboard, Form, showToast, Toast, Icon } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Form, showToast, Toast } from "@raycast/api";
 import { ConversionResult } from "@/types/conversionResult";
 import { actions as converterActions } from "@/utils/converterActions";
 
